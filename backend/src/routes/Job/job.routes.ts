@@ -9,9 +9,9 @@ import { protect } from "../../utils/protect";
 
 const router = Router();
 
-router.post("/createJob", protect(), createJob);
+router.post("/createJob", protect(["employer", "admin"]), createJob);
 router.get("/getJobs", getAllJobs);
 router.get("/getJob/:id", getJob);
-router.get("/deleteJob/:id", protect(), deleteJob);
+router.delete("/deleteJob/:id", protect(["employer", "admin"]), deleteJob);
 
 export default router;
