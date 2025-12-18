@@ -35,4 +35,4 @@ const protect =
     }
   };
 
-module.exports = protect; // ✅ CommonJS export
+module.exports = protect;
