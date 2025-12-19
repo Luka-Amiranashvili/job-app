@@ -4,7 +4,7 @@ import {
   deleteJob,
   getAllJobs,
   getJob,
-} from "../../controllers/job/createJob.controller";
+} from "../../controllers/job/job.controller";
 import { protect } from "../../utils/protect";
 
 const router = Router();

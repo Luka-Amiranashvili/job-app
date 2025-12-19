@@ -23,9 +23,34 @@ export const createJob = async (req: any, res: Response) => {
 
 export const getAllJobs = async (req: Request, res: Response) => {
   try {
-    const jobs = await Job.find().populate("postedBy", "name email");
+    const { title, company, location, jobType, postedBy, minSalary } =
+      req.query;
+    let query: any = { status: "open" };
+
+    if (title) {
+      query.title = { $regex: title, $options: "i" };
+    }
+    if (company) {
+      query.company = { $regex: company, $options: "i" };
+    }
+    if (location) {
+      query.location = { $regex: location, $options: "i" };
+    }
+    if (jobType) {
+      query.jobType = jobType;
+    }
+    if (postedBy) {
+      query.postedBy = postedBy;
+    }
+    if (minSalary) {
+      query.salary = { $gte: Number(minSalary) };
+    }
+    const jobs = await Job.find(query)
+      .populate("postedBy", "name email")
+      .sort("-createdAt");
 
     res.status(200).json({
+      success: true,
       count: jobs.length,
       jobs,
     });
