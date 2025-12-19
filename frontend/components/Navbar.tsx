@@ -9,7 +9,7 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-blue-300 dark:border-gray-800 dark:bg-background-dark/90 backdrop-blur-md ">
+    <header className="sticky top-0 z-50 w-full border-b border-blue-300 dark:border-gray-800  backdrop-blur-md ">
       <div className="px-4 md:px-10 lg:px-40 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-4">
           <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-white">
@@ -69,7 +69,7 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full  dark:bg-background-dark border-b border-[#f0f2f4] dark:border-gray-800 shadow-xl animate-in slide-in-from-top duration-300">
+        <div className="lg:hidden absolute top-full left-0 w-full border-b border-[#f0f2f4] dark:border-gray-800 shadow-xl animate-in slide-in-from-top duration-300">
           <nav className="flex flex-col p-6 gap-4">
             <Link
               onClick={() => setIsOpen(false)}
