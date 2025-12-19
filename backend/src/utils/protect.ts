@@ -10,7 +10,7 @@ interface AuthRequest extends Request {
   user?: JwtPayload;
 }
 
-const protect =
+export const protect =
   (roles: string[] = []) =>
   (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
@@ -34,5 +34,3 @@ const protect =
       res.status(401).json({ message: "Unauthorized" });
     }
   };
-
-module.exports = protect;
