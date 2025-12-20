@@ -20,11 +20,18 @@ export default function Hero() {
   const handleSearch = useCallback(
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault();
+      if (!search.trim() && !location.trim()) {
+        console.log("Please enter a search term");
+      }
+
       setLoading(true);
       try {
-        const res = await api.get(
-          `/job/getJobs?title=${search}&location=${location}`
-        );
+        const params = new URLSearchParams({
+          title: search.trim(),
+          location: location.trim(),
+        });
+
+        const res = await api.get(`/job/getJobs?${params.toString()}`);
         setJobs(res.data.jobs);
       } catch (err) {
         console.error("Search failed", err);
@@ -64,11 +71,11 @@ export default function Hero() {
                 className="flex flex-col md:flex-row items-stretch bg-white dark:bg-gray-900 p-2 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800"
               >
                 <div className="flex-1 flex items-center px-4 h-14 group">
-                  <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary mr-2">
+                  <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary mr-2 py-3">
                     search
                   </span>
                   <input
-                    className="w-full bg-transparent border-none focus:ring-0 text-base"
+                    className="w-full bg-transparent border-none focus:ring-0 text-base focus:outline-none"
                     placeholder="Job title or company"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -76,11 +83,11 @@ export default function Hero() {
                 </div>
                 <div className="hidden md:block w-px h-8 bg-gray-200 self-center"></div>
                 <div className="flex-1 flex items-center px-4 h-14 group">
-                  <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary mr-2">
+                  <span className="material-symbols-outlined text-gray-400 group-focus-within:text-primary mr-2 py-3">
                     location_on
                   </span>
                   <input
-                    className="w-full bg-transparent border-none focus:ring-0 text-base"
+                    className="w-full bg-transparent border-none focus:ring-0 text-base focus:outline-none"
                     placeholder="Location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
@@ -97,7 +104,6 @@ export default function Hero() {
           </div>
         </section>
 
-        {/* JOB LISTINGS SECTION */}
         <section className="px-4 md:px-10 lg:px-40 py-16 bg-gray-50/50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-800">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
