@@ -59,17 +59,17 @@ const Navbar = () => {
 
         <button
           onClick={toggleMenu}
-          className="lg:hidden p-2 text-gray-600 dark:text-gray-300"
+          className="lg:hidden flex items-center justify-center size-10 rounded-full border border-blue-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm text-gray-700 dark:text-gray-200 shadow-sm transition-all hover:bg-white active:scale-95"
           aria-label="Toggle Menu"
         >
-          <span className="material-symbols-outlined !text-[28px]">
+          <span className="material-symbols-outlined !text-[24px]">
             {isOpen ? "close" : "menu"}
           </span>
         </button>
       </div>
 
       {isOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full border-b border-[#f0f2f4] dark:border-gray-800 shadow-xl animate-in slide-in-from-top duration-300">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-white dark:bg-[#101622] border-b border-blue-300 dark:border-gray-800 shadow-2xl z-50">
           <nav className="flex flex-col p-6 gap-4">
             <Link
               onClick={() => setIsOpen(false)}
