@@ -2,16 +2,12 @@ import type { Request, Response, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
 
 interface JwtPayload {
-  id?: string;
   userId: string;
   role: string;
 }
 
 interface AuthRequest extends Request {
-  user?: {
-    userId: string;
-    role: string;
-  };
+  user?: JwtPayload;
 }
 
 export const protect =
@@ -24,9 +20,10 @@ export const protect =
       }
 
       const token = authHeader.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
 
-      const extractedId = decoded.userId || decoded.id;
+      const extractedId = decoded.userId;
+      const extractedRole = decoded.role;
 
       if (!extractedId) {
         return res.status(401).json({ message: "Invalid token payload" });
@@ -34,16 +31,16 @@ export const protect =
 
       req.user = {
         userId: extractedId,
-        role: decoded.role,
+        role: extractedRole,
       };
 
-      if (roles.length && !roles.includes(decoded.role)) {
+      if (roles.length && !roles.includes(extractedRole)) {
         return res.status(403).json({ message: "Forbidden" });
       }
 
       next();
     } catch (err) {
-      console.error(err);
+      console.error("Auth Middleware Error:", err);
       res.status(401).json({ message: "Unauthorized" });
     }
   };
