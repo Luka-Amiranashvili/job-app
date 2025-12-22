@@ -156,13 +156,18 @@ const Navbar = () => {
             {user ? (
               <>
                 <div className="py-2">
-                  <p className="text-sm font-bold leading-none">
-                    {user.name.charAt(0).toUpperCase() +
-                      user.name.slice(1).toLowerCase()}
-                  </p>
-                  <p className="text-[10px] uppercase text-primary font-bold">
-                    {user.userType}
-                  </p>
+                  <Link
+                    href={"/profile"}
+                    className="text-right hover:opacity-70 transition-opacity group"
+                  >
+                    <p className="text-sm font-bold leading-none">
+                      {user.name.charAt(0).toUpperCase() +
+                        user.name.slice(1).toLowerCase()}
+                    </p>
+                    <p className="text-[10px] uppercase text-primary font-bold">
+                      {user.userType}
+                    </p>
+                  </Link>
                 </div>
 
                 <button

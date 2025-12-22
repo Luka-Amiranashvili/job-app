@@ -171,6 +171,30 @@ export default function Hero() {
             </div>
           </div>
         </section>
+        <section className="px-4 md:px-10 lg:px-40 py-16 bg-gray-50/50 dark:bg-gray-900/30 border-t border-gray-100 dark:border-gray-800">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold">Latest Opportunities</h3>
+              <span className="text-sm text-gray-500">
+                {jobs.length} jobs found
+              </span>
+            </div>
+
+            {!loading && jobs.length > 0 && (
+              <div className="mt-12 flex justify-center">
+                <Link
+                  href="/jobs"
+                  className="group flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 px-8 py-4 rounded-2xl font-bold hover:border-primary hover:text-primary transition-all shadow-sm hover:shadow-md"
+                >
+                  Explore All Jobs
+                  <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">
+                    arrow_forward
+                  </span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );
