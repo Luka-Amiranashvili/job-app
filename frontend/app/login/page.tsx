@@ -25,7 +25,9 @@ export default function LoginPage() {
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      router.push("/");
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 150);
       router.refresh();
     } catch (err: unknown) {
       const axiosError = err as AxiosError<{ message: string }>;
