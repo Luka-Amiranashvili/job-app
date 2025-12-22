@@ -52,7 +52,7 @@ const Navbar = () => {
               href="/register"
               className="flex items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold shadow-sm hover:bg-blue-700 transition-colors"
             >
-              Join Now
+              Register
             </Link>
           </div>
         </div>
@@ -106,7 +106,7 @@ const Navbar = () => {
                 href="/register"
                 className="flex items-center justify-center rounded-xl h-12 bg-primary text-white text-base font-bold shadow-sm"
               >
-                Join Now
+                Register
               </Link>
             </div>
           </nav>
