@@ -21,9 +21,14 @@ export default function LoginPage() {
 
     try {
       const res = await api.post("/auth/login", { email, password });
-      Cookies.set("token", res.data.token, { expires: 7 });
 
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      Cookies.set("token", res.data.token, { expires: 7 });
+      Cookies.set("userRole", res.data.user.role || res.data.user.userType, {
+        expires: 7,
+      });
 
       setTimeout(() => {
         window.location.replace("/");

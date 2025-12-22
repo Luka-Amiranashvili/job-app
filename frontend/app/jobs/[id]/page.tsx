@@ -21,6 +21,7 @@ const JobDetails = () => {
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [hasApplied, setHasApplied] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -28,25 +29,31 @@ const JobDetails = () => {
       setUser(JSON.parse(savedUser));
     }
   }, []);
-
   const onApply = async () => {
     try {
-      const jobId = id;
-      const res = await api.post("/applications/apply", { jobId });
+      const res = await api.post("/applications/apply", { jobId: id });
 
-      if (res.data.success) {
+      if (res.status === 201) {
         alert("Application submitted successfully!");
+        setHasApplied(true);
       }
     } catch (err: unknown) {
-      let message = "Already applied or server error";
+      let errorMessage = "An unexpected error occurred";
 
       if (err && typeof err === "object" && "response" in err) {
-        const axiosError = err as { response: { data: { message?: string } } };
-        message = axiosError.response.data.message || message;
+        const axiosError = err as {
+          response: { data: { message?: string }; status: number };
+        };
+
+        if (axiosError.response.status === 400) {
+          setHasApplied(true);
+        }
+
+        errorMessage = axiosError.response.data.message || errorMessage;
       }
 
-      alert(message);
-      console.error("Application error:", err);
+      alert(errorMessage);
+      console.log("Application info:", errorMessage);
     }
   };
 
@@ -149,10 +156,19 @@ const JobDetails = () => {
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm sticky top-24">
             <h4 className="font-bold mb-4">Interested in this role?</h4>
             <button
-              onClick={() => protectAction(router, user, onApply)}
-              className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg mb-3"
+              disabled={hasApplied}
+              onClick={() => {
+                const currentUser =
+                  user || JSON.parse(localStorage.getItem("user") || "null");
+                protectAction(router, currentUser, onApply);
+              }}
+              className={`w-full font-bold py-3 rounded-xl transition-all shadow-lg mb-3 ${
+                hasApplied
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-primary hover:bg-blue-700 text-white"
+              }`}
             >
-              Apply Now
+              {hasApplied ? "Application Submitted" : "Apply Now"}
             </button>
             <button className="w-full border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-bold py-3 rounded-xl transition-all">
               Save Job
