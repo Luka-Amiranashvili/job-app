@@ -32,11 +32,15 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
+
+    Cookies.remove("token");
+    Cookies.remove("userRole");
+
     setUser(null);
     setIsOpen(false);
-    router.push("/login");
+    window.location.replace("/login");
   };
 
   const isEmployer =
