@@ -84,13 +84,15 @@ const Navbar = () => {
               (user ? (
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-sm font-bold leading-none">
-                      {user.name.charAt(0).toUpperCase() +
-                        user.name.slice(1).toLowerCase()}
-                    </p>
-                    <p className="text-[10px] uppercase text-primary font-bold">
-                      {user.userType}
-                    </p>
+                    <Link href={"/profile"}>
+                      <p className="text-sm font-bold leading-none">
+                        {user.name.charAt(0).toUpperCase() +
+                          user.name.slice(1).toLowerCase()}
+                      </p>
+                      <p className="text-[10px] uppercase text-primary font-bold">
+                        {user.userType}
+                      </p>
+                    </Link>
                   </div>
                   <button
                     onClick={handleLogout}
