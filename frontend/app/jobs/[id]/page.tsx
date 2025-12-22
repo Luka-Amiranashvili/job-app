@@ -29,8 +29,25 @@ const JobDetails = () => {
     }
   }, []);
 
-  const onApply = () => {
-    console.log("Job applied");
+  const onApply = async () => {
+    try {
+      const jobId = id;
+      const res = await api.post("/applications/apply", { jobId });
+
+      if (res.data.success) {
+        alert("Application submitted successfully!");
+      }
+    } catch (err: unknown) {
+      let message = "Already applied or server error";
+
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosError = err as { response: { data: { message?: string } } };
+        message = axiosError.response.data.message || message;
+      }
+
+      alert(message);
+      console.error("Application error:", err);
+    }
   };
 
   useEffect(() => {
