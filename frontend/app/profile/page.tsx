@@ -33,7 +33,7 @@ export default function ProfilePage() {
 
   const fetchMyJobs = async () => {
     try {
-      const res = await api.get("/applications/my-applications");
+      const res = await api.get("/applications/my-posted-jobs");
       console.log("Gios jobs:", res.data.data);
 
       if (res.data.success) {
@@ -68,8 +68,7 @@ export default function ProfilePage() {
     e.stopPropagation();
     if (!confirm("Delete this job listing?")) return;
     try {
-      await api.delete(`/job/${id}`);
-      // Type safety for the filter function
+      await api.delete(`/job/deleteJob/${id}`);
       setMyJobs((prevJobs) => prevJobs.filter((j: Job) => j._id !== id));
       if (selectedJob?._id === id) setSelectedJob(null);
     } catch (err) {
@@ -89,7 +88,6 @@ export default function ProfilePage() {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: JOB LISTINGS */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -118,8 +116,10 @@ export default function ProfilePage() {
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-bold text-lg">{job.title}</h3>
-                    <p className="text-sm text-gray-500">{job.location}</p>
+                    <h3 className="font-bold text-lg text-black">
+                      {job.title}
+                    </h3>
+                    <p className="text-sm text-black">{job.location}</p>
                   </div>
                   <button
                     onClick={(e) => deleteJob(job._id, e)}
@@ -137,7 +137,6 @@ export default function ProfilePage() {
           )}
         </div>
 
-        {/* RIGHT COLUMN: CANDIDATES LIST */}
         <div className="lg:col-span-7">
           <div className="bg-slate-900 rounded-[2rem] p-8 text-white min-h-[500px]">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
