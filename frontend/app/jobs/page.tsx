@@ -51,7 +51,7 @@ const AllJobsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <header className="mb-12">
-        <h1 className="text-4xl font-black text-gray-900 mb-2">
+        <h1 className="text-4xl font-black text-white mb-2">
           Explore Opportunities
         </h1>
         <p className="text-gray-500">
