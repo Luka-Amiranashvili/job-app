@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/axios";
 import Link from "next/link";
-import { protectAction } from "@/lib/auth-helper";
+import { protectAction, User } from "@/lib/auth-helper";
 
 interface Job {
   _id: string;
@@ -20,6 +20,14 @@ const JobDetails = () => {
   const router = useRouter();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser && savedUser !== "undefined") {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const onApply = () => {
     console.log("Job applied");
@@ -124,7 +132,7 @@ const JobDetails = () => {
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm sticky top-24">
             <h4 className="font-bold mb-4">Interested in this role?</h4>
             <button
-              onClick={() => protectAction(router, onApply)}
+              onClick={() => protectAction(router, user, onApply)}
               className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg mb-3"
             >
               Apply Now
