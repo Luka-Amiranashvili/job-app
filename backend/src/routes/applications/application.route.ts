@@ -3,6 +3,7 @@ import { protect } from "../../utils/protect";
 import {
   applyToJob,
   getJobCandidates,
+  getMyPostedJobs,
   myApplications,
   updateApplicationStatus,
 } from "../../controllers/application/application.controller";
@@ -16,6 +17,7 @@ router.get(
   protect(["employer", "admin"]),
   getJobCandidates
 );
+router.get("/my-posted-jobs", protect(["employer"]), getMyPostedJobs);
 router.patch(
   "/status/:id",
   protect(["employer", "admin"]),

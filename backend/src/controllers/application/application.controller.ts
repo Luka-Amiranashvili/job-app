@@ -47,6 +47,26 @@ export const myApplications = async (req: any, res: Response) => {
   }
 };
 
+export const getMyPostedJobs = async (req: any, res: Response) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.user.userId }).sort(
+      "-createdAt"
+    );
+
+    res.status(200).json({
+      success: true,
+      count: jobs.length,
+      data: jobs,
+    });
+  } catch (error) {
+    console.error("Error fetching employer jobs:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching your jobs",
+    });
+  }
+};
+
 export const getJobCandidates = async (req: any, res: Response) => {
   try {
     const { jobId } = req.params;
