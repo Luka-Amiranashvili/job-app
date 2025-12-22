@@ -1,8 +1,15 @@
 import { Response, Request } from "express";
 import Job from "../../models/Job";
 
-export const createJob = async (req: any, res: Response) => {
+interface AuthRequest extends Request {
+  user?: any;
+}
+
+export const createJob = async (req: AuthRequest, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
     const { title, company, location, description, salary, jobType } = req.body;
 
     const job = await Job.create({
