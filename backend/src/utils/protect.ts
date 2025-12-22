@@ -2,12 +2,16 @@ import type { Request, Response, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
 
 interface JwtPayload {
-  id: string;
+  id?: string;
+  userId: string;
   role: string;
 }
 
 interface AuthRequest extends Request {
-  user?: JwtPayload;
+  user?: {
+    userId: string;
+    role: string;
+  };
 }
 
 export const protect =
@@ -22,7 +26,16 @@ export const protect =
       const token = authHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-      req.user = decoded;
+      const extractedId = decoded.userId || decoded.id;
+
+      if (!extractedId) {
+        return res.status(401).json({ message: "Invalid token payload" });
+      }
+
+      req.user = {
+        userId: extractedId,
+        role: decoded.role,
+      };
 
       if (roles.length && !roles.includes(decoded.role)) {
         return res.status(403).json({ message: "Forbidden" });
