@@ -3,6 +3,7 @@ import Job from "../../models/Job";
 
 interface AuthRequest extends Request {
   user?: any;
+  body: any;
 }
 
 export const createJob = async (req: AuthRequest, res: Response) => {
