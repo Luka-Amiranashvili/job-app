@@ -22,7 +22,22 @@ export const register = async (req: Request, res: Response) => {
       role: userRole,
     });
     await user.save();
-    return res.status(201).json({ message: "User created successfully" });
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET!,
+      { expiresIn: "7d" }
+    );
+    return res.status(201).json({
+      message: "User created successfully",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
