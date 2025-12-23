@@ -5,10 +5,22 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { protectAction } from "../../lib/auth-helper";
 import { User } from "../../lib/auth-helper";
+
+interface ZodIssue {
+  message: string;
+  path: (string | number)[];
+}
+
+interface BackendErrorResponse {
+  message?: string;
+  errors?: ZodIssue[];
+}
+
 const PostJob = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const [formData, setFormData] = useState({
     title: "",
@@ -16,7 +28,7 @@ const PostJob = () => {
     location: "",
     description: "",
     salary: "",
-    jobType: "Remote",
+    jobType: "remote",
   });
 
   useEffect(() => {
@@ -35,11 +47,21 @@ const PostJob = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
     protectAction(router, user, async () => {
       setLoading(true);
@@ -71,8 +93,18 @@ const PostJob = () => {
           alert("Job Created Successfully!");
           router.push("/jobs");
         } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message || "Something went wrong"}`);
+          const errorData: BackendErrorResponse = await response.json();
+
+          if (errorData.errors) {
+            const fieldErrors: { [key: string]: string } = {};
+            errorData.errors.forEach((err) => {
+              const fieldName = err.path[0] as string;
+              fieldErrors[fieldName] = err.message;
+            });
+            setErrors(fieldErrors);
+          } else {
+            alert(`Error: ${errorData.message || "Something went wrong"}`);
+          }
         }
       } catch (error) {
         console.error("Submission error:", error);
@@ -98,12 +130,20 @@ const PostJob = () => {
             </label>
             <input
               name="title"
-              required
               value={formData.title}
               placeholder="e.g. Junior Backend Developer"
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                errors.title
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-200"
+              }`}
             />
+            {errors.title && (
+              <p className="text-red-500 text-xs mt-1 font-semibold">
+                {errors.title}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -113,23 +153,42 @@ const PostJob = () => {
               </label>
               <input
                 name="company"
-                required
+                value={formData.company}
                 placeholder="Pulse AI"
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                  errors.company
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {errors.company && (
+                <p className="text-red-500 text-xs mt-1 font-semibold">
+                  {errors.company}
+                </p>
+              )}
             </div>
+
             <div>
               <label className="block text-sm font-bold text-gray-50 mb-1">
                 Location
               </label>
               <input
                 name="location"
-                required
+                value={formData.location}
                 placeholder="Remote"
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                  errors.location
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {errors.location && (
+                <p className="text-red-500 text-xs mt-1 font-semibold">
+                  {errors.location}
+                </p>
+              )}
             </div>
           </div>
 
@@ -139,12 +198,21 @@ const PostJob = () => {
             </label>
             <textarea
               name="description"
-              required
               rows={5}
-              placeholder="Describe the role, tech stack, and responsibilities..."
+              value={formData.description}
+              placeholder="Describe the role..."
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                errors.description
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-200"
+              }`}
             />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1 font-semibold">
+                {errors.description}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -155,26 +223,46 @@ const PostJob = () => {
               <input
                 name="salary"
                 type="number"
-                required
+                value={formData.salary}
                 placeholder="85000"
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                  errors.salary
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {errors.salary && (
+                <p className="text-red-500 text-xs mt-1 font-semibold">
+                  {errors.salary}
+                </p>
+              )}
             </div>
+
             <div>
               <label className="block text-sm font-bold text-gray-50 mb-1">
                 Job Type
               </label>
               <select
                 name="jobType"
+                value={formData.jobType}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className={`w-full px-4 py-3 border rounded-lg outline-none transition-all text-black ${
+                  errors.jobType
+                    ? "border-red-500 ring-1 ring-red-500"
+                    : "border-gray-200"
+                }`}
               >
-                <option value="Remote">Remote</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Part-time">Part-time</option>
+                <option value="remote">Remote</option>
+                <option value="full-time">Full-time</option>
+                <option value="contract">Contract</option>
+                <option value="part-time">Part-time</option>
               </select>
+              {errors.jobType && (
+                <p className="text-red-500 text-xs mt-1 font-semibold">
+                  {errors.jobType}
+                </p>
+              )}
             </div>
           </div>
 
