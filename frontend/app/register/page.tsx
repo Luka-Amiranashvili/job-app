@@ -37,9 +37,9 @@ export default function RegisterPage() {
 
       Cookies.set("token", res.data.token, { expires: 7 });
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
 
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     } catch (err: unknown) {
       const axiosError = err as AxiosError<{ message: string }>;
       setError(axiosError.response?.data?.message || "Registration failed.");
