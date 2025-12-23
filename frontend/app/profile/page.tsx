@@ -106,7 +106,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <header className="mb-10">
-        <h1 className="text-4xl font-black text-slate-900">
+        <h1 className="text-4xl font-black text-white">
           {userRole === "employer" ? "Employer Dashboard" : "My Applications"}
         </h1>
         <p className="text-slate-500">
@@ -117,7 +117,6 @@ export default function ProfilePage() {
       </header>
 
       {userRole === "employer" ? (
-        /* --- EMPLOYER VIEW --- */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
