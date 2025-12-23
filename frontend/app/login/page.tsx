@@ -30,9 +30,7 @@ export default function LoginPage() {
         expires: 7,
       });
 
-      setTimeout(() => {
-        window.location.replace("/");
-      }, 150);
+      window.location.href = "/";
       router.refresh();
     } catch (err: unknown) {
       const axiosError = err as AxiosError<{ message: string }>;

@@ -11,24 +11,26 @@ const Navbar = () => {
     name: string;
     userType: string;
     role?: string;
-  } | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  } | null>(() => {
+    if (typeof window !== "undefined") {
       const savedUser = localStorage.getItem("user");
       if (savedUser && savedUser !== "undefined" && savedUser !== "null") {
         try {
-          setUser(JSON.parse(savedUser));
+          return JSON.parse(savedUser);
         } catch (e) {
-          console.error("Auth parse error", e);
-          localStorage.removeItem("user");
+          return null;
         }
       }
+    }
+    return null;
+  });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
       setIsLoaded(true);
-    }, 0);
-    return () => clearTimeout(timer);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const handleLogout = () => {
