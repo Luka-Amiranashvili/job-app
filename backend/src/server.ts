@@ -24,7 +24,16 @@ app.use(helmet());
 app.use(hpp());
 app.set("trust proxy", 1);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://job-app-bepw.vercel.app", "http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.options("*", cors());
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
